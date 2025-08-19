@@ -1,69 +1,81 @@
 import pandas as pd
 
-# Carregar a base de dados
-imoveis = pd.read_csv("C:\\Documentos\\analise_dados\\imoveis_brasil.csv")
+df = pd.read_csv("C:/Users/angel/OneDrive/Documentos/analise_de_dados/imoveis_brasil.csv")
 
-# 1. Visualizações iniciais
-print(imoveis.head())      # primeiras 5 linhas
-print(imoveis.tail())      # últimas 5 linhas
-print(imoveis.sample(5))   # amostra aleatória
+#mostrar as 5 primeiras, 5 últimas e amostra de 5
+df.head()
+df.tail()
+df.sample(5)
 
-# 2. Dimensões do DataFrame
-print("Linhas e colunas:", imoveis.shape)
+#número de linhas e colunas
+df.shape
 
-# 3. Nomes das variáveis
-print("Colunas:", imoveis.columns.tolist())
+#listar nomes das colunas
+df.columns
 
-# 4. Tipagem dos dados
-print(imoveis.dtypes)
+#tipos de dados
+df.dtypes
 
-# 5. Estatísticas descritivas
-print(imoveis.describe())
+#estatísticas numéricas
+df.describe()
 
-# 6. Informações gerais
-imoveis.info()
+#informações gerais
+df.info()
 
-# 7. Categorias de imóveis
-print(imoveis['Tipo_Imovel'].unique())
+#tipos de imóveis
+df['Tipo_Imovel'].unique()
 
-# 8. Imóveis acima de 1 milhão
-luxo = imoveis[imoveis['Valor_Imovel'] > 1_000_000]
-print(luxo)
+#filtrar imóveis acima de R$ 1.000.000,00
+df_caros = df["Valor_Imovel"] > 1000000
+df_1M = df.loc[df_caros]
+df_1M
 
-# 9. Seleção de colunas específicas
-subset = imoveis[['Cidade', 'Bairro', 'Valor_Imovel']]
-print(subset.head())
+#selecionar colunas cidade, bairro e valor
+df2 = df[['Cidade', 'Bairro', 'Valor_Imovel']]
+df2.head()
 
-# 10. Filtragem por cidade (Curitiba)
-curitiba = imoveis.query("Cidade == 'Curitiba'")
-print(curitiba)
+#filtrar imóveis de Curitiba
+df_curitiba = df[df['Cidade'] == 'Curitiba']
+df_curitiba
 
-# 11. Contagem de valores ausentes
-print(imoveis.isna().sum())
+#verificar valores nulos
+df.isnull().sum()
 
-# 12. Top 10 imóveis mais caros
-print(imoveis.sort_values('Valor_Imovel', ascending=False).head(10))
+#ordenar 10 imóveis mais caros
+df.sort_values(by='Valor_Imovel', ascending=False).head(10)
 
-# 13 a 15. Métricas de valor
-print("Média:", imoveis['Valor_Imovel'].mean())
-print("Mediana:", imoveis['Valor_Imovel'].median())
-print("Desvio padrão:", imoveis['Valor_Imovel'].std())
+#valor médio
+df['Valor_Imovel'].mean()
 
-# 16. Área mínima e máxima
-print("Área mínima:", imoveis['Area_m2'].min())
-print("Área máxima:", imoveis['Area_m2'].max())
+#valor mediano
+df['Valor_Imovel'].median()
 
-# 17. Quantidade acima e abaixo da média
-media_valor = imoveis['Valor_Imovel'].mean()
-print("Qtd abaixo:", (imoveis['Valor_Imovel'] < media_valor).sum())
-print("Qtd acima:", (imoveis['Valor_Imovel'] >= media_valor).sum())
+#desvio padrão
+print(df['Valor_Imovel'].std())
 
-# 18. Criar coluna com preço por m²
-imoveis['Preco_m2'] = imoveis['Valor_Imovel'] / imoveis['Area_m2']
-print(imoveis.head())
+#valor mínimo e máximo da área construída
+df['Area_m2'].min()
+df['Area_m2'].max()
 
-# 19. Inserir um registro fictício
-registro = {
+#número de imóveis estão abaixo/acima da média
+media = df['Valor_Imovel'].mean()
+"Abaixo:", (df['Valor_Imovel'] < media).sum()
+"Acima:", (df['Valor_Imovel'] >= media).sum()
+
+filtro = df["Valor_Imovel"] < media
+df_menor = df.loc[filtro]
+len(df_menor)
+
+filtro2 = df["Valor_Imovel"] > media
+df_maior = df.loc[filtro2]
+len(df_maior)
+
+#inserir coluna valor_m2
+df['valor_m2'] = df['Valor_Imovel'] / df['Area_m2']
+df.head()
+
+#inserir linha 
+nova_linha = {
     'ID_Imovel': 9999,
     'Tipo_Imovel': 'Casa',
     'Cidade': 'Teste',
@@ -72,23 +84,23 @@ registro = {
     'Numero_Quartos': 2,
     'Numero_Banheiros': 1,
     'Numero_Vagas': 1,
-    'Valor_Imovel': 999_999,
+    'Valor_Imovel': 999999,
     'Ano_Construcao': 2025,
-    'Preco_m2': 999_999 / 100
+    'valor_m2': 999999 / 100
 }
-imoveis = pd.concat([imoveis, pd.DataFrame([registro])], ignore_index=True)
+df = pd.concat([df, pd.DataFrame([nova_linha])], ignore_index=True)
 
-# 20. Checagem de nulos novamente
-print(imoveis.isna().sum())
+#valores nulos
+df.isnull().sum()
 
-# 21. Remover imóveis com exatamente 5 quartos
-imoveis = imoveis[imoveis['Numero_Quartos'] != 5]
+#remover imóveis com Numero_Quartos = 5
+df = df[df['Numero_Quartos'] == 5]
 
-# 22. Excluir coluna de ID
-imoveis.drop(columns=['ID_Imovel'], inplace=True)
+#excluir coluna ID_Imovel
+df = df.drop(columns=['ID_Imovel'])
 
-# 23. Excluir registros da cidade fictícia
-imoveis = imoveis[imoveis['Cidade'] != 'Teste']
+#remover imóveis da cidade "Teste"
+df = df[df['Cidade'] == 'Teste']
 
-# 24. Média de valor agrupada por cidade
-print(imoveis.groupby('Cidade')['Valor_Imovel'].mean())
+#agrupar por cidade e calcular média de valor dos imóveis
+df.groupby('Cidade')['Valor_Imovel'].mean()

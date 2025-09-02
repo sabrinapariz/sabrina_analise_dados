@@ -26,3 +26,15 @@ dados = dados["value"]
 df = pd.DataFrame(dados)
 df["VALDATA"] = pd.to_datetime(df["VALDATA"], errors="coerce")
 df[["VALDATA", "VALVALOR"]].plot()
+
+#API football-data.org
+import requests
+
+url = 'https://api.football-data.org/v4/matches'
+headers = { 'X-Auth-Token': '9e5a7ab2d7a5471b8c82d87a15efff19' }
+response = requests.get(url, headers=headers)
+response = response.json()
+matches = response["matches"]
+df = pd.DataFrame(matches)
+
+

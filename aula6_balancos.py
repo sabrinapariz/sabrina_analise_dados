@@ -155,8 +155,3 @@ df_final.sort_values(["roe"])
 #roic=ebit/valor investido
 #ebit=lucro operacional
 #Valor investido = capital próprio (PL) + capital de terceiros (empréstimos)
-
-
-
-
-

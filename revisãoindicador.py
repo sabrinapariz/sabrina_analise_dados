@@ -78,3 +78,4 @@ filtro = pd.DataFrame(dados)
 filtro = (df["descricao"]=="Ativo Total") & (df["conta"]=="1")
 df.loc[filtro]["valor"].iloc[0]
 
+

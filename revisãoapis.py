@@ -73,7 +73,9 @@ response = rq.get(url)
 
 df= df[["date","value"]]
 menor= df["value"].min()
+print(menor)
 filtro = df["value"]==menor
+df.loc[filtro]
 
 
 

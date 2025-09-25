@@ -73,7 +73,11 @@ dados_categorias = {
 }
 
 df_categorias = pd.DataFrame(dados_categorias)
-pd.merge(df, df_categorias, on="pants_desceription", how = "inner")
+pd.merge(df, df_categorias, on="pants_description", how = "inner") 
+#inner → pega apenas o que aparece nos dois DataFrames
+#outer → pega tudo, preenchendo onde faltar
+#left → mantém todas as linhas do da esquerda
+#right → mantém todas as linhas do da direita
 
 #Exercício 5
 #5. Imagine que você tem um DataFrame df_ratings_extra com avaliações atualizadas. Faça um merge com o dataset original, mantendo todos os registros (how='left'). Depois compare ratings (antiga) com avg_new_rating (nova).
